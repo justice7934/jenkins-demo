@@ -1,0 +1,8 @@
+image:
+  repository: justice797934/jenkins-demo
+  tag: latest
+
+service:
+  type: NodePort
+  port: 80
+  nodePort: 30088

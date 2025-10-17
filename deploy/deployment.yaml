@@ -15,7 +15,7 @@ spec:
         app: jenkins-demo
     spec:
       containers:
-      - name: jenkins-demo
-        image: justice797934/jenkins-demo:latest
-        ports:
-        - containerPort: 80
+        - name: jenkins-demo
+          image: justice797934/jenkins-demo:latest   # ✅ Docker Hub 이미지 경로
+          ports:
+            - containerPort: 80

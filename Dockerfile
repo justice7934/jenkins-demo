@@ -2,7 +2,7 @@
 FROM nginx:alpine
 
 # HTML 파일을 직접 생성
-RUN echo "<h1>테스트 2222</h1>" > /usr/share/nginx/html/index.html
+RUN echo "<h1>테스트 222222</h1>" > /usr/share/nginx/html/index.html
 
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]

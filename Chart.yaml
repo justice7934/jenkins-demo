@@ -1,0 +1,5 @@
+apiVersion: v2
+name: jenkins-demo
+description: Helm chart for Jenkins Demo App
+version: 0.1.0
+appVersion: "1.0"

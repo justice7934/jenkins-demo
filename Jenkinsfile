@@ -1,6 +1,11 @@
 pipeline {
     agent any
 
+    environment {
+        DOCKERHUB_CREDENTIALS = 'dockerhub-cred'
+        DOCKERHUB_REPO = 'justice7934/jenkins-demo'  // Docker Hub 리포 이름
+    }
+
     stages {
         stage('Checkout') {
             steps {
@@ -12,20 +17,27 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 echo "🐳 Docker 이미지 빌드 중..."
-                sh 'docker build -t jenkins-demo:latest .'
+                sh 'docker build -t ${DOCKERHUB_REPO}:latest .'
             }
         }
 
-        stage('Run Container') {
+        stage('Login & Push to DockerHub') {
             steps {
-                echo "🚀 컨테이너 실행 중..."
-                sh 'docker run -d -p 8088:80 --name demo-web jenkins-demo:latest || true'
+                echo "🚀 DockerHub 로그인 및 푸시 중..."
+                withCredentials([usernamePassword(credentialsId: "${DOCKERHUB_CREDENTIALS}", usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                    sh '''
+                        echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
+                        docker push ${DOCKERHUB_REPO}:latest
+                        docker logout
+                    '''
+                }
             }
         }
 
-        stage('Check Page') {
+        stage('Test Run') {
             steps {
-                echo "🌐 페이지 응답 테스트 중..."
+                echo "🧪 이미지 실행 테스트..."
+                sh 'docker run -d -p 8088:80 --name demo-web ${DOCKERHUB_REPO}:latest || true'
                 sh 'sleep 3 && curl -s http://localhost:8088 || echo "curl failed"'
             }
         }
@@ -41,7 +53,7 @@ pipeline {
 
     post {
         success {
-            echo "✅ Jenkins Pipeline 성공적으로 완료!"
+            echo "✅ Jenkins Pipeline 성공적으로 완료 (DockerHub 업로드 포함)!"
         }
         failure {
             echo "❌ Pipeline 실패 — 로그를 확인하세요."

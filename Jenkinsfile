@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         DOCKERHUB_CREDENTIALS = 'dockerhub-cred'
-        DOCKERHUB_REPO = 'justice7934/jenkins-demo'  // Docker Hub 리포 이름
+        DOCKERHUB_REPO = 'justice797934/jenkins-demo'  // Docker Hub 리포 이름
     }
 
     stages {
